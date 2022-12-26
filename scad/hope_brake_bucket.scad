@@ -1,7 +1,7 @@
 $fn=50;
 include <libs/nutsnbolts/cyl_head_bolt.scad>;
 include <libs/nutsnbolts/materials.scad>;
-include <libs/utils.scad>;
+//include <libs/scad-lenbok-utils/utils.scad>;
 include <libs/nwh_utils.scad>;
 
 
@@ -42,8 +42,8 @@ module hole() {
 
 module screw_holes() {  
     hole_offset=mainl/2-screw_sep/2;
-    translate([mainw/2, hole_offset, mainh]) hole_through(name="M1", l=mainh, cld=0, h=0, hcld=0);
-    translate([mainw/2, hole_offset+screw_sep, mainh]) hole_through(name="M1", l=mainh, cld=0, h=0, hcld=0);   
+    translate([mainw/2, hole_offset, mainh]) hole_through(name="M2", l=mainh, cld=0, h=0, hcld=0);
+    translate([mainw/2, hole_offset+screw_sep, mainh]) hole_through(name="M2", l=mainh, cld=0, h=0, hcld=0);   
 }
 
 module band_pegs() {  
