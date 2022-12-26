@@ -1,3 +1,6 @@
 [submodule "scad/libs/nutsnbolts"]
 	path = scad/libs/nutsnbolts
 	url = git@github.com:JohK/nutsnbolts.git
+[submodule "scad/libs/scad-lenbok-utils"]
+	path = scad/libs/scad-lenbok-utils
+	url = git@github.com:Lenbok/scad-lenbok-utils.git
