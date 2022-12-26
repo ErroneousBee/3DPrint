@@ -1,11 +1,12 @@
 $fn=50;
 include <libs/nutsnbolts/cyl_head_bolt.scad>;
 include <libs/nutsnbolts/materials.scad>;
-//include <libs/scad-lenbok-utils/utils.scad>;
 include <libs/nwh_utils.scad>;
 
 
 // Hope V4 Brake bleed bucket
+// Sits on top of the resevoir, held on with silicon band ( less fuss than screwing it on )
+// If you prefer screw holes, look at screw_sep and band_sep vars.
 
 // Size of the flat base
 mainw = 20;
