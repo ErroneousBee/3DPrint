@@ -24,17 +24,17 @@ r_handle=20;
 h_trivet=15;
 
 // A trivet that fits in the dish
-difference() {
-    translate([wall+2,wall+2,wall])
-        trivet(width-(wall*2)-4,depth-(wall*2)-4,h_trivet-wall,grid=[15,19],bar=3);
-    dish(width,depth,height,wall,m_inner,m_outer);
-}
+//difference() {
+//    translate([wall+2,wall+2,wall])
+//        trivet(width-(wall*2)-4,depth-(wall*2)-4,h_trivet-wall,grid=[15,19],bar=3);
+//    dish(width,depth,height,wall,m_inner,m_outer);
+//}
 
 
 // A dish with no handle ( e.g. soap dish ) 
-dish(width,depth,height,wall,m_inner,m_outer);
-translate([wall+2,wall+2,0])
-    trivet_holder(width-(wall*2)-4,depth-(wall*2)-4,wall+8,grid=[15,19],bar=3);
+//dish(width,depth,height,wall,m_inner,m_outer);
+//translate([wall+2,wall+2,0])
+//    trivet_holder(width-(wall*2)-4,depth-(wall*2)-4,wall+8,grid=[15,19],bar=3);
 
 
 //// A fat catcher dish, with a small handle
@@ -42,6 +42,17 @@ translate([wall+2,wall+2,0])
 //    handle_1(r_handle);
 //dish(width,depth,height,wall,m_inner,m_outer);
 
+// Plant or pen holder.
+//dish(100,100,100,2,10,5);
+
+// Cress grower, use a paper towel over the grid
+//dish(50,50,40,2,10,5);
+
+// Grid for cress grower
+//difference() {
+//    translate([4,4,2]) trivet(42,42,8,grid=[8,8],bar=1);
+//    dish(50,50,40,2,10,5);
+//}
 
 /**
  * A semicircular handle with a bit of an undercut
