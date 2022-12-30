@@ -33,7 +33,7 @@ difference() {
  * The main blank shape
  */
 module body() {
-    roundedRect([mainw,mainl,mainh], 2);
+    roundedRect([mainw,mainl,mainh], 5);
     translate([mainw/2,mainl/2,cylh/2 + mainh])  cylinder(h=cylh, r1=cylr, r2=cylr ,center=true);
     band_pegs();
 }
