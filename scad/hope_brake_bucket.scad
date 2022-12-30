@@ -10,7 +10,7 @@ include <libs/nwh_utils.scad>;
 
 // Size of the flat base
 mainw = 20;
-mainl = 60;
+mainl = 55;
 mainh = 3;
 
 // Size of the fill bucket
@@ -55,8 +55,8 @@ module hole() {
 module screw_holes() {  
     hole_offset=mainl/2-screw_sep/2;
     hole_crust=0.5; // undrilled bit of hole, to allow non-screw use
-    translate([mainw/2, hole_offset, mainh+hole_crust]) hole_through(name="M2", l=mainh-hole_crust, cld=0, h=0, hcld=0);
-    translate([mainw/2, hole_offset+screw_sep, mainh+hole_crust]) hole_through(name="M2", l=mainh-hole_crust, cld=0, h=0, hcld=0);   
+    translate([mainw/2, hole_offset, mainh+hole_crust]) hole_through(name="M3", l=mainh-hole_crust, cld=0, h=0, hcld=0);
+    translate([mainw/2, hole_offset+screw_sep, mainh+hole_crust]) hole_through(name="M3", l=mainh-hole_crust, cld=0, h=0, hcld=0);   
 }
 
 /**
