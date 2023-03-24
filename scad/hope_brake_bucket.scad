@@ -27,7 +27,14 @@ difference() {
     body();
     color("red") hole();
     color("blue") screw_holes(); // Dont need screw holes, its easier to use a rubber band
+    translate([mainw/2,mainl/2 + mainw/2 +4 ,mainh-0.4]) color("red") linear_extrude(height=0.4) 
+        text("Hope",4,"Liberation Sans", valign = "center", halign = "center");
+    translate([mainw/2,mainl/2 - mainw/2 -4 ,mainh-0.4]) color("red") linear_extrude(height=0.4) 
+        text("V4",4,"Liberation Sans", valign = "center", halign = "center");
 }
+
+
+
 
 /**
  * The main blank shape
