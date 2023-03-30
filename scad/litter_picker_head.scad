@@ -5,39 +5,52 @@ include <libs/nwh_utils.scad>;
 
 
 // Size of the internal slot
-mainw = 13;
+innerw = 12.2;
+outerw = 13+6;
 mainl = 40;
+wall = (outerw-innerw)/2;
 
-// wall size of external body
-wall=6;
-
-// gripper
+// gripper studs
 studw=5;
 studh=3;
 studl=7;
 
+// Slidy slot for hooks, prongs, etc
+dock_inner_w=8;
+dock_inner_d=3;
+dock_wall = 2;
+dock_slot_w=4;
+dock_outer_w = dock_inner_w+ dock_wall+dock_wall;
+dock_outer_d = dock_inner_d+ dock_wall+dock_wall;
+
 // Hook
 hookw=3;
-hookh=(mainw/2)-wall/2;
+hookh=(innerw/2)-3;
 hookr=5;
 hookr_hook=30;
 
-difference() {
+*difference() {
     union() {
         body();
-        translate([0,2,0]) gripper_1();
-        translate([0,2,studh]) gripper_2();
         
-        translate([0,0,0]) rotate([0,0,90]) gripper_1();
-        translate([0,0,studh]) rotate([0,0,90]) gripper_2();
+        translate([0,5,0]) gripper_1();
+        translate([0,5,studh]) gripper_2();
+        
+        translate([-2,0,0]) rotate([0,0,90]) gripper_1();
+        //translate([-2,0,studh]) rotate([0,0,90]) gripper_2();
 
-        translate([10,3,0]) dock();
+        translate([dock_outer_d + outerw -dock_wall,dock_outer_w + (outerw/2) - (dock_outer_w/2) ,0]) rotate([0,0,180]) dock();
         translate([21,21,0]) grip_surface();
 
         //translate([9,23,-5]) rotate([0,90,0]) translate([-40,0,0]) hook(hookw,hookh,hookr,hookr_hook);
     }
     hole();
 }
+*dimples();
+
+
+hook();
+
 
 
 
@@ -47,33 +60,33 @@ difference() {
  * The main blank shape
  */
 module body() {
-        roundedRect([mainw+wall,mainw+wall,mainl], 5);
+        roundedRect([outerw,outerw,mainl], 5);
 }
 
 module hole() {
-    translate([wall/2,wall/2,wall]) roundedRect([mainw,mainw,mainl], 2);   
+    translate([wall,wall,wall]) roundedRect([innerw,innerw,mainl], 2);   
 }
 
 // interlocking studs in a row as a gripping surface
 module gripper_1() {
     
-    off=mainw+1;
-    translate([0,wall/2,1]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
-    translate([off,wall/2,1]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    off=outerw-studw;
+    
+    translate([0,0,1]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    translate([off,0,1]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
 
-    translate([0,wall/2,8]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
-    translate([off,wall/2,8]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);  
+    translate([0,0,8]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    translate([off,0,8]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);  
 
-    translate([0,wall/2,16]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
-    translate([off,wall/2,16]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);     
+    translate([0,0,16]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    translate([off,0,16]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);     
 }
+
 module gripper_2() {
-    
-    offset=(mainw/5+wall) -studw/2 +1;
-    
-    translate([offset,wall/2,1]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
-    translate([offset,wall/2,8]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
-    translate([offset,wall/2,16]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    off = (outerw-studw)/2;
+    translate([off,0,1]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    translate([off,0,8]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
+    translate([off,0,16]) rotate([90,0,0]) roundedRect([studw,studh,studl], 2);
 }
 
 module hook(w,h,r,r_hook) {
@@ -133,17 +146,69 @@ module grip_surface() {
     }   
 }
 
-module dock() {
-    
-    slwall=2;
-    slw1=mainw-slwall-slwall;
-    slw2=6;
-    
-    difference() {
-        roundedRect([mainw,mainw,mainl], 2);
-        translate([mainw-slwall-slwall,slwall,3]) cube([slwall,slw1,mainl]);
-        translate([slwall+3,slwall+1.5,6]) cube([slw1,slw2,mainl]);
+// Some traction pimples for holding us onto the stick
+module dimples() {
+   
+    plink_r=1;
+    translate([wall-(plink_r/2),outerw/2,wall+10]) sphere(plink_r);
+    translate([wall-(plink_r/2),outerw/2,wall+20]) sphere(plink_r);
+    translate([wall-(plink_r/2),outerw/2,wall+30]) sphere(plink_r);
 
+    translate([outerw/2,wall-(plink_r/2),wall+10]) sphere(plink_r);
+    translate([outerw/2,wall-(plink_r/2),wall+20]) sphere(plink_r);
+    translate([outerw/2,wall-(plink_r/2),wall+30]) sphere(plink_r);
+    
+    translate([outerw/2,outerw-wall+(plink_r/2),wall+10]) sphere(plink_r);
+    translate([outerw/2,outerw-wall+(plink_r/2),wall+20]) sphere(plink_r);
+    translate([outerw/2,outerw-wall+(plink_r/2),wall+30]) sphere(plink_r);
+    
+    translate([outerw-wall+(plink_r/2),outerw/2,wall+10]) sphere(plink_r);
+    translate([outerw-wall+(plink_r/2),outerw/2,wall+20]) sphere(plink_r);
+    translate([outerw-wall+(plink_r/2),outerw/2,wall+30]) sphere(plink_r);
+
+}
+
+module dock() {
+          
+    difference() {
+        roundedRect([dock_outer_w,dock_outer_w,mainl], 2);
+        translate([dock_wall*2+dock_inner_d,0,-1]) cube([dock_outer_w,dock_outer_w,mainl+2]);
+        translate([dock_wall,dock_wall,3]) cube([dock_inner_d,dock_inner_w,mainl]);
+        translate([0,dock_slot_w,6]) cube([dock_wall,dock_slot_w,mainl]);
     }
     
+    // Some traction pimples for slide in bits
+    plink_r=1;
+    translate([dock_wall+dock_inner_d+(plink_r/2), dock_outer_w/2 ,13])  sphere(plink_r);
+    translate([dock_wall+dock_inner_d+(plink_r/2), dock_outer_w/2 ,23])  sphere(plink_r);
+    translate([dock_wall+dock_inner_d+(plink_r/2), dock_outer_w/2 ,33])  sphere(plink_r);
+  
+}
+
+module hook() {
+    
+    dock_clear_d = dock_inner_d - 0.2;
+    dock_clear_w = dock_inner_w - 0.2;
+    
+    translate([dock_wall,dock_wall,0]) cube([dock_clear_d,dock_clear_w,mainl]);
+    translate([0,dock_slot_w,3]) cube([dock_wall,dock_slot_w,mainl-3]);
+
+    translate([-20,dock_slot_w,3]) cube([20,dock_slot_w,dock_slot_w]);    
+    
+    l=dock_slot_w;
+    w=dock_slot_w*2;
+    h=dock_slot_w;
+    translate([-20,dock_slot_w,3+dock_slot_w]) polyhedron(
+              points=[[0,0,0], [w,0,0],  [w,l,0],  [0,l,0], [0,l,h], [0,0,h]],
+              faces= [[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4], [5,2,1]]
+              );
+    
+    translate([-dock_slot_w,dock_slot_w,3+dock_slot_w]) polyhedron(
+              points=[[0,0,0],  [l,0,0],  [l,l,0],  [0,l,0], [l,l,h], [l,0,h]],
+              faces= [[0,1,2,3],[0,3,4,5],[2,1,5,4],[3,2,4],[1,0,5] ]
+              );
+        
+    
+    
+        
 }
