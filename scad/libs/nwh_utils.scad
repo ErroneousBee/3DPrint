@@ -119,14 +119,14 @@ module m3_hole(x=12,radius,angle=0) {
 }
 
 // hole and hex nutcatch in line with hole
-module nut_and_hole(xlate=[0,0,0],type="M3",lx=4,lh=50) {
+module nut_and_hole(xlate=[0,0,0],type="M3", catch_clearance=1, length=50, head_depth=0, head_clearance=0.1) {
 	translate(xlate) rotate([0,180,0]) {
-			nutcatch_parallel(type,l=lx);
-			hole_through(name=type, l=lh, cld=0.1, h=0, hcld=0.1);
+			nutcatch_parallel(type,clh=catch_clearance);
+			translate([0,0,-length]) rotate([0,180,0]) hole_through(name=type, l=length-head_depth, cld=0.1, h=head_depth, hcld=head_clearance);
 	}
 }
 
-// Bolt with hex nutcatch in line.
+// Bolt with hex nutcatch in line. ( deprecated )
 module bolthole(name="M4", l=10,nutcatch_h=10,nutcatch_d=4) {
 	union() {
 			hole_through(name=name, l=l, cld=.5, h=0, hcl=0.5); // small hole
@@ -147,4 +147,116 @@ module recess_hole(x=12,diameter=8,radius=20,angle=0) {
                 
             }
 		}
+}
+
+/**
+ * A grid to rest soap bars on, that can rest inside the dish. 
+ * Suggested use is to use difference() with the container its in.
+ * @parm w width of trivet in mm
+ * @parm d depth or length in mm
+ * @parm h height of bars in mm
+ * @parm bar width of an individual bar  in mm
+ * @parm grid[x,y] size of a single cell in the grid in mm
+ */
+module trivet_grid(w,d,h,bar=2,grid=[12,12]) {
+      
+    // How many bars on the x and y axes
+    xbars=abs(w/(2*grid[0]));
+    ybars=abs(d/(2*grid[1]));
+   
+    for ( i=[0:xbars]) {
+            translate([w/2-(bar/2)+(i*grid[0]),0,0]) rounded_bar([bar,d,h]);
+            translate([w/2-(bar/2)-(i*grid[0]),0,0]) rounded_bar([bar,d,h]);
+    }
+        for ( i=[0:ybars]) {
+            translate([0,d/2-(bar/2)+(i*grid[1]),0]) rounded_bar([w,bar,h]);
+            translate([0,d/2-(bar/2)-(i*grid[1]),0]) rounded_bar([w,bar,h]);
+    }
+    
+}
+
+/**
+ * A mesh grid on legs to go in bottom of pot. 
+ * @parm w width of trivet in mm
+ * @parm d depth or length in mm
+ * @parm h height of bars in mm. Caller is under an obligation to difference() the dish 
+ *         so that the trivet fits in the dish bottom
+ * @parm bar width of an individual bar  in mm
+ * @parm grid[x,y] number of bars in each direction
+ */
+module trivet_mesh(w,d,h,bar=2,grid=[12,12]) {
+    
+    module bar(l,r) {
+        cylinder(l,r,r,center=false);
+        translate([0,0,0]) sphere(r);
+        translate([0,0,l]) sphere(r);
+    }
+        
+      
+    // How many bars on the x and y axes
+    x_gap=w/(grid[0]-1);
+    y_gap=d/(grid[1]-1);
+   
+    for ( i=[0:x_gap:w] ) {
+            translate([i,0,0]) rotate([270,0,0]) bar(d,bar/2);
+    }
+    for ( i=[0:y_gap:d] ) {
+        translate([0,i,0]) rotate([0,90,0]) bar(w,bar/2);
+    }
+    
+    for ( i=[1:grid[0]-2] ) {
+        for ( j=[1:grid[1]-2] ) {
+            translate([i*x_gap,j*y_gap,0]) bar(h,bar/2);
+        }
+    }
+    
+}
+
+/**
+ * Four pegs in the base of the dish, to stop the trivet rising when the soap is lifted.
+ * @parm w width of trivet in mm
+ * @parm d depth or length in mm
+ * @parm h height of bars in mm. Caller is under an obligation to difference() the dish 
+ *         so that the trivet fits in the dish bottom
+ * @parm bar width of an individual bar  in mm
+ * @parm grid[x,y] size of a single cell in the grid in mm
+ */
+module trivet_grid_holder(w,d,h,bar=2,grid=[12,12]) {
+    
+    xbars=abs(w/(2*grid[0]));
+    ybars=abs(d/(2*grid[1]));
+    
+    x1=(w/2) - (1*grid[0]) + bar/2;
+    y1=(d/2) - (1*grid[1]) + bar/2;
+    x2=(w/2) + (1*grid[0]) - bar/2*3;
+    y2=(d/2) + (1*grid[1]) - bar/2*3;
+      
+    translate([x1,y1,0]) rounded_bar([bar,bar,h]);
+    translate([x1,y2,0]) rounded_bar([bar,bar,h]);
+    translate([x2,y1,0]) rounded_bar([bar,bar,h]);
+    translate([x2,y2,0]) rounded_bar([bar,bar,h]);
+}
+
+/**
+ * A rounded wall peice that we use to create the trivet and holder pegs. 
+ */
+module rounded_bar(dim) {
+    w=dim[0];
+    d=dim[1];
+    h=dim[2];
+    
+    r=(min(w,d)/2);
+    tx=( w<d ) ? r : w-r;
+    ty=( w<d ) ? d-r : r;
+    
+    hull() {
+        translate([r,r,0]) {
+            cylinder(r1=r,r2=r,h=h-r);
+            translate([0,0,h-r]) sphere(r=r);
+        }
+        translate([tx,ty,0]) {
+            cylinder(r1=r,r2=r,h=h-r);
+            translate([0,0,h-r]) sphere(r=r);
+        }
+    }
 }
