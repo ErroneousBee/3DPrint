@@ -29,15 +29,15 @@ hookh=(innerw/2)-3;
 hookr=5;
 hookr_hook=30;
 
-*difference() {
+difference() {
     union() {
         body();
         
         translate([0,5,0]) gripper_1();
-        translate([0,5,studh]) gripper_2();
+        translate([0,6,studh]) gripper_2();
         
-        translate([-2,0,0]) rotate([0,0,90]) gripper_1();
-        //translate([-2,0,studh]) rotate([0,0,90]) gripper_2();
+        translate([-1,0,0]) rotate([0,0,90]) gripper_1();
+        translate([-2,0,studh]) rotate([0,0,90]) gripper_2();
 
         translate([dock_outer_d + outerw -dock_wall,dock_outer_w + (outerw/2) - (dock_outer_w/2) ,0]) rotate([0,0,180]) dock();
         translate([21,21,0]) grip_surface();
@@ -46,10 +46,10 @@ hookr_hook=30;
     }
     hole();
 }
-*dimples();
+dimples();
 
 
-hook();
+//hook();
 
 
 
