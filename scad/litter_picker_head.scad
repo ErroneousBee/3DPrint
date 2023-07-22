@@ -33,8 +33,8 @@ difference() {
     union() {
         body();
         
-        translate([0,5,0]) gripper_1();
-        translate([0,6,studh]) gripper_2();
+        translate([0,4,0]) gripper_1();
+        translate([0,5,studh]) gripper_2();
         
         translate([-1,0,0]) rotate([0,0,90]) gripper_1();
         translate([-2,0,studh]) rotate([0,0,90]) gripper_2();
@@ -49,11 +49,7 @@ difference() {
 dimples();
 
 
-//hook();
-
-
-
-
+*hook();
 
 
 /**
@@ -190,22 +186,31 @@ module hook() {
     dock_clear_d = dock_inner_d - 0.2;
     dock_clear_w = dock_inner_w - 0.2;
     
-    translate([dock_wall,dock_wall,0]) cube([dock_clear_d,dock_clear_w,mainl]);
-    translate([0,dock_slot_w,3]) cube([dock_wall,dock_slot_w,mainl-3]);
+    translate([dock_wall,dock_wall,0]) cube([dock_clear_d,dock_clear_w,mainl-3]);
+    translate([0,dock_slot_w,3]) cube([dock_wall,dock_slot_w,mainl-6]);
 
-    translate([-20,dock_slot_w,3]) cube([20,dock_slot_w,dock_slot_w]);    
+    translate([-15,dock_slot_w,3]) cube([15,dock_slot_w,dock_slot_w]);    
     
     l=dock_slot_w;
     w=dock_slot_w*2;
     h=dock_slot_w;
     translate([-20,dock_slot_w,3+dock_slot_w]) polyhedron(
-              points=[[0,0,0], [w,0,0],  [w,l,0],  [0,l,0], [0,l,h], [0,0,h]],
+              points=[[0,0,0], [w,0,0],  [w,l,0],  [0,l,0], [0,l,h*2], [0,0,h*2]],
               faces= [[0,1,2,3],[5,4,3,2],[0,4,5,1],[0,3,4], [5,2,1]]
               );
     
-    translate([-dock_slot_w,dock_slot_w,3+dock_slot_w]) polyhedron(
-              points=[[0,0,0],  [l,0,0],  [l,l,0],  [0,l,0], [l,l,h], [l,0,h]],
+    translate([-w,dock_slot_w,3+dock_slot_w]) polyhedron(
+              points=[[0,0,0],  [w,0,0],  [w,l,0],  [0,l,0], [w,l,h*2], [w,0,h*2]],
               faces= [[0,1,2,3],[0,3,4,5],[2,1,5,4],[3,2,4],[1,0,5] ]
+              );
+              
+    lb=21;          
+    wb=dock_slot_w;
+    hb=dock_slot_w+3;
+    translate([-20,dock_slot_w,0]) polyhedron(
+              points=[[0,0,hb],  [lb,0,hb],   [lb,wb,hb],   [0,wb,hb], 
+                      [5,0,0],   [lb-2,0,0],  [lb-2,wb,0],  [5,wb,0]],
+              faces= [[3,2,1,0], [4,5,6,7], [0,4,7,3], [2,6,5,1], [0,1,5,4], [2,3,7,6]]
               );
         
     
