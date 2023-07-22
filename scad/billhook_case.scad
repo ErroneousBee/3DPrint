@@ -5,12 +5,12 @@ include <libs/nutsnbolts/cyl_head_bolt.scad>;
 include <libs/nutsnbolts/materials.scad>;
 include <libs/nwh_utils.scad>;
  
-$fn=180;
+$fn=60;
 
 // Measured 
 toolthickness = 4;
-toollength = 300;
-toolwidth = 200;
+toollength = 240;
+toolwidth = 130;
 
 // Derived/decided
 wallh = 5;
@@ -41,17 +41,32 @@ difference() {
     head_depth=3);
     
     // End holes
-    #translate([width/2,length - wallw/2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
+    translate([width/2,length - wallw/2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
 
     // Side holes
-    translate([wallw/2,length/3,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
-    translate([wallw/2,length/3*2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
-    translate([width -wallw/2,length/3,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
-    translate([width -wallw/2,length/3*2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
+    translate([wallw/2,5+length/3,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);   
+    translate([wallw/2,-5+length/3,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
+  
+    translate([wallw/2,5+length/3*2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);  
+    translate([wallw/2,-5+length/3*2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
     
-    // Halver
-    // translate([-1,-1,totalh/2]) cube([width+2,length+2,totalh]);
+    translate([width -wallw/2,5+length/3,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);   
+    translate([width -wallw/2,-5+length/3,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
+    
+    translate([width -wallw/2,-5+length/3*2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
+    translate([width -wallw/2,5+length/3*2,0]) nut_and_hole(xlate=[0,0,0],type="M3",catch_clearance=1,length=totalh, head_depth=3);
+    
+    // Halver BOTTOM / TOP
+    //translate([-1,-1,totalh/2]) cube([width+2,length+2,totalh]);
     translate([-1,-1,-totalh/2]) cube([width+2,length+2,totalh]);
+    
+    // Lengther 1/3 and 2/3 BOT
+    //translate([-1,length/3 -1]) cube([width+2,length,2*totalh]);
+    //translate([-1,-length/3*2, -1]) cube([width+2,length,2*totalh]);
+
+    // Lengther 1/3 and 2/3 TOP
+    //translate([-1,length/3*2, -1]) cube([width+2,length+2,2*totalh]);
+    translate([-1,-length/3, -1]) cube([width+2,length+2,2*totalh]);
 }
 
 
@@ -65,9 +80,11 @@ module case() {
     translate([0,0,totalh-wallh]) cube([width,length,wallh]);
     
     // internal grid
-    trivet_grid(width,length,totalh/2 - toolthickness/2,grid=[12,12],bar=5);
-    translate([width,0,totalh]) rotate([0,180,0]) trivet_grid(width,length,totalh/2 - toolthickness/2,grid=[12,12],bar=5);
-
+    translate([0,2,0]) 
+        trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,12],bar=4);
+    translate([width,2,totalh]) rotate([0,180,0])
+        trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,12],bar=4);
+    
     // 4 walls
     cube([width,wallw,totalh]);
     cube([wallw,length,totalh]);
