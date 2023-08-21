@@ -163,14 +163,19 @@ module trivet_grid(w,d,h,bar=2,grid=[12,12]) {
     // How many bars on the x and y axes
     xbars=abs(w/(2*grid[0]));
     ybars=abs(d/(2*grid[1]));
-   
-    for ( i=[0:xbars]) {
+
+
+    if ( xbars > 0 && xbars < 10000) {
+        for ( i=[0:xbars]) {
             translate([w/2-(bar/2)+(i*grid[0]),0,0]) rounded_bar([bar,d,h]);
             translate([w/2-(bar/2)-(i*grid[0]),0,0]) rounded_bar([bar,d,h]);
+        }
     }
+    if ( ybars > 0 && ybars < 10000) {
         for ( i=[0:ybars]) {
             translate([0,d/2-(bar/2)+(i*grid[1]),0]) rounded_bar([w,bar,h]);
             translate([0,d/2-(bar/2)-(i*grid[1]),0]) rounded_bar([w,bar,h]);
+        }
     }
     
 }

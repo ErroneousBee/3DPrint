@@ -13,9 +13,9 @@ toollength = 240;
 toolwidth = 130;
 
 // Derived/decided
-wallh = 5;
-wallw = 10;
-totalh = 20;
+wallh = 3;
+wallw = 8;
+totalh = 16;
 clearance = 3;
 width=toolwidth + 2*(wallw + clearance);
 length=toollength + 2*(wallw + clearance);
@@ -81,9 +81,9 @@ module case() {
     
     // internal grid
     translate([0,2,0]) 
-        trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,12],bar=4);
+        trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,0],bar=2);
     translate([width,2,totalh]) rotate([0,180,0])
-        trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,12],bar=4);
+        trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[20,0],bar=2);
     
     // 4 walls
     cube([width,wallw,totalh]);
