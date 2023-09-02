@@ -14,7 +14,7 @@ $fn=60;
 //toolwidth = 130;
 toolthickness = 3.5;
 toolhiltthickness = 5;
-toollength = 215;
+toollength = 225;
 toolwidth = 115;
 
 // Derived/decided
@@ -24,22 +24,13 @@ totalh = 12;    // Enough space for the tool and the walls. Make this a metric b
 clearance = 2;  // Enough room for the tool to slide in down the sides
 width=toolwidth + 2*(wallw + clearance);
 length=toollength + 2*(wallw + clearance);
-
-
-
+    
 difference() {
     
     case();
-    
-    // Space for the tool
-    tool();
-    
+      
     // A hole for attaching a belthook
-    belthook_offset=10;
-    translate([belthook_offset,20,0])  belthook_hole();
-    translate([width-belthook_offset,20,0])  belthook_hole();
-    translate([belthook_offset,60,0]) belthook_hole();
-    translate([width-belthook_offset,60,0])  belthook_hole();
+    belthook_holes("M6",10,20,50);
     
     // Screw it all together after printing
     boltholes();
@@ -48,24 +39,34 @@ difference() {
     translate([width/2, (length/2), totalh-0.5]) linear_extrude(height=totalh+2) 
         rotate([0,0,180]) text("A C G",32,"Liberation Sans", valign = "center", halign = "center");
     
-
-    
+  
     // Halver BOTTOM / TOP
     //translate([-1,-1,totalh/2]) cube([width+2,length+2,totalh]);
-    //translate([-1,-1,-totalh/2]) cube([width+2,length+2,totalh]);
+    translate([-1,-1,-totalh/2]) cube([width+2,length+2,totalh]);
     
     // Lengther 1/3 and 2/3 BOT
-    //translate([-1,length/3 -1]) cube([width+2,length,2*totalh]);
-    //translate([-1,-length/3*2, -1]) cube([width+2,length,2*totalh]);
+    //translate([-1,length/3, -1])    cube([width+2,length,2*totalh]);
+    //translate([-1,-length*2/3, -1]) cube([width+2,length,2*totalh]);
 
     // Lengther 1/3 and 2/3 TOP
-    //translate([-1,-length/3, -1]) cube([width+2,length+2,2*totalh]);
-    //translate([-1,length/3*2, -1]) cube([width+2,length+2,2*totalh]);
+    //translate([-1,-length/3, -1]) cube([width+2,length,2*totalh]);
+    translate([-1,length*2/3, -1]) cube([width+2,length,2*totalh]);
 }
+
+module case() {
+       
+    belthook_holes("M10",10,20,50);
+
+    difference() {
+        basic_case();
+        tool_void();
+    }
+}
+    
 
 
 // Solid case, we will subtract the tool part elsewhare
-module case() {
+module basic_case() {
     
     // Bottom part
     cube([width,length,wallh]);
@@ -73,10 +74,10 @@ module case() {
     // Top part
     translate([0,0,totalh-wallh]) cube([width,length,wallh]);
     
-    // internal grid
-    translate([0,2,0]) 
+    // internal grid to keep tool out of contact
+    translate([2,2,0]) 
         trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,0],bar=2);
-    translate([width,2,totalh]) rotate([0,180,0])
+    translate([2,length-2,totalh]) rotate([180,0,0])
         trivet_grid(width-4,length-4,totalh/2 - toolthickness/2,grid=[12,0],bar=2);
     
     // 4 walls
@@ -88,14 +89,22 @@ module case() {
 }
 
 // Basic shape of the billhook to make sure it slides into the case
-module tool() {
+module tool_void() {
     
     // Bulk of the Billhook
     translate([(width-toolwidth)/2,0,(totalh-toolthickness)/2]) cube([toolwidth, toollength, toolthickness]);
     
     // Blade thickens towards the handle
-    translate([width/2,0,(totalh/2)]) resize([toolwidth,toollength/3,toolhiltthickness]) sphere(r=10);
+    translate([width/2,0,(totalh/2)]) resize([toolwidth,toollength,toolhiltthickness]) sphere(r=10);
     
+}
+
+module belthook_holes(size="M6", insetx, insety, gap ) {
+
+    translate([insetx,insety,0])  belthook_hole(size);
+    translate([width-insetx,insety,0])  belthook_hole(size);
+    translate([insetx,insety+gap,0]) belthook_hole(size);
+    translate([width-insetx,insety+gap,0])  belthook_hole(size);
 }
 
 module belthook_hole(size="M6") {
