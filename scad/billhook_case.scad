@@ -30,7 +30,7 @@ difference() {
     case();
       
     // A hole for attaching a belthook
-    belthook_holes("M6",10,20,50);
+    belthook_holes("M6",10,20,45);
     
     // Screw it all together after printing
     boltholes();
@@ -41,21 +41,21 @@ difference() {
     
   
     // Halver BOTTOM / TOP
-    //translate([-1,-1,totalh/2]) cube([width+2,length+2,totalh]);
-    translate([-1,-1,-totalh/2]) cube([width+2,length+2,totalh]);
+    translate([-1,-1,totalh/2]) cube([width+2,length+2,totalh]);
+    //translate([-1,-1,-totalh/2]) cube([width+2,length+2,totalh]);
     
     // Lengther 1/3 and 2/3 BOT
     //translate([-1,length/3, -1])    cube([width+2,length,2*totalh]);
-    //translate([-1,-length*2/3, -1]) cube([width+2,length,2*totalh]);
+    translate([-1,-length*2/3, -1]) cube([width+2,length,2*totalh]);
 
     // Lengther 1/3 and 2/3 TOP
     //translate([-1,-length/3, -1]) cube([width+2,length,2*totalh]);
-    translate([-1,length*2/3, -1]) cube([width+2,length,2*totalh]);
+    //translate([-1,length*2/3, -1]) cube([width+2,length,2*totalh]);
 }
 
 module case() {
        
-    belthook_holes("M10",10,20,50);
+    belthook_holes("M10",10,20,45);
 
     difference() {
         basic_case();
@@ -109,7 +109,7 @@ module belthook_holes(size="M6", insetx, insety, gap ) {
 
 module belthook_hole(size="M6") {
     
-    translate([0,0,-1]) rotate([180,0,0]) hole_through(name=size, l=totalh+2, cld=0.1, h=0, hcld=0.2);
+    rotate([180,0,0]) hole_through(name=size, l=totalh, cld=0.1, h=0, hcld=0.2);
 }
 
 // bolt holes in the corners and sides for putting it together
