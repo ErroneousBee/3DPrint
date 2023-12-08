@@ -1,5 +1,25 @@
 // Neils utility functions
 
+//include <nutsnbolts/cyl_head_bolt.scad>;
+//include <nutsnbolts/materials.scad>;
+//examples();
+
+module examples() {
+    
+    // Countersonk holes with notcatch for attaching halves of a thing together
+    translate([0,20,0]) countersink_with_nutcatch(type="M3", catch_clearance=1, length=10 );    
+    translate([20,20,0]) countersink_with_nutcatch(type="M4", catch_clearance=1, length=20 );    
+    translate([40,20,0]) countersink_with_nutcatch(type="M6", catch_clearance=1, length=30 );    
+
+    // Socket head bolts 
+    translate([0,40,0]) nut_and_hole(type="M3", catch_clearance=1, length=10, head_depth=4, head_clearance=0.1);
+    translate([20,40,0]) nut_and_hole(type="M4", catch_clearance=1, length=20, head_depth=5, head_clearance=0.1);
+    translate([40,40,0]) nut_and_hole(type="M6", catch_clearance=1, length=30, head_depth=5, head_clearance=0.1); 
+
+}
+
+
+
 // 1/4 tube to round edges with.
 module roundel(l=40, r=3) {
 	r2 = r*2;
@@ -37,7 +57,8 @@ module roundedRect(size, r) {
 
 	linear_extrude(height=z) hull() {
     	// place 4 circles in the corners, with the given radius
-    	translate([r,r,0])     circle(r=r);
+    	translate([r,r,0])     circle(r=r);    translate([0,20,0]) nut_and_hole(type="M3", catch_clearance=1, length=50, head_depth=5, head_clearance=0.1);
+
     	translate([r,y-r,0])   circle(r=r);
     	translate([x-r,y-r,0]) circle(r=r);
     	translate([x-r,r,0])   circle(r=r);
@@ -118,7 +139,16 @@ module m3_hole(x=12,radius,angle=0) {
 		}
 }
 
-// hole and hex nutcatch in line with hole
+// A standard Metric countersunk hole with extra clearance above
+module countersink_with_nutcatch(type="M3" , length=50 ,catch_clearance=1) {
+    
+    rotate([180,0,0]) nutcatch_parallel(type,clh=catch_clearance);
+    translate([0,0,length]) rotate([180,0,0]) countersink_iso(size=type);
+	rotate([180,0,0]) hole_through(name=type, l=length, cld=0.1, h=0, hcld=0.1);	
+		
+}
+
+// hole for cylinder head bolt and hex nutcatch in line with hole
 module nut_and_hole(xlate=[0,0,0],type="M3", catch_clearance=1, length=50, head_depth=0, head_clearance=0.1) {
 	translate(xlate) rotate([0,180,0]) {
 			nutcatch_parallel(type,clh=catch_clearance);
