@@ -1,29 +1,38 @@
 $fn=180;
 GOLDENRATIO = 1.618;
 
-BASE_HEIGHT=30; // At least 10, more to move bulb to center of globe
+BASE_HEIGHT=20; // At least 10, more to move bulb to center of globe
 BASE_RADIUS=58/2; // Measured
 BASE_WALL=4;
 
-GLOBE_RADIUS=70;
+GLOBE_RADIUS=50;
 GLOBE_WALL=3;
+GLOBE_SCALE=1.5;
+
+SKIN_THICKNESS=0.4;
 
 SHAPE_RADIUS=5;
 
 BASE_OFFSET = sqrt( ( GLOBE_RADIUS * GLOBE_RADIUS ) - ( BASE_RADIUS * BASE_RADIUS ) );
 
-// Base 
+
+
+// The main globe, with the base cut off and placed on the xy plane.
 difference() {
-    cylinder(h=BASE_HEIGHT, r=BASE_RADIUS, $fn=60);  
-    translate([0,0,-1]) cylinder(h=BASE_HEIGHT+2, r=BASE_RADIUS-BASE_WALL, $fn=60);  
+    scale([1,1,GLOBE_SCALE]) translate([0,0,BASE_OFFSET]) mainshade();
+    translate([0,0,-GLOBE_RADIUS]) cylinder(h=GLOBE_RADIUS, r=BASE_RADIUS, $fn=30);  
 }
 
-// The ball on top
-translate([0,0,BASE_OFFSET + BASE_HEIGHT - GLOBE_WALL]) mainshade();
+// Base, moved below the xy plane
+difference() {
+    translate([0,0,-BASE_HEIGHT]) cylinder(h=BASE_HEIGHT, r=BASE_RADIUS);  
+    translate([0,0,-BASE_HEIGHT-1]) cylinder(h=BASE_HEIGHT+2, r=BASE_RADIUS-BASE_WALL);  
+}
+    
 
-// guide for bulb 
-//translate([100,0,100]) sphere(10);
 
+// A guide for a golfball sized bulb in roughly the right height from bottom of shade
+//translate([100,0,100-BASE_HEIGHT]) sphere(15);
 
 
 module mainshade() {
@@ -39,8 +48,7 @@ module mainshade() {
     difference() {
         sphere(GLOBE_RADIUS);
         sphere(GLOBE_RADIUS - GLOBE_WALL);
-        translate([0,0,-GLOBE_RADIUS]) cylinder(h=GLOBE_RADIUS, r=BASE_RADIUS-1, $fn=60);  
-      
+              
         // Holes all the way through
         for(i=[1:N]) {
             radius = GLOBE_RADIUS;
@@ -56,7 +64,6 @@ module mainshade() {
     // Outer skin
     difference() {
         sphere(GLOBE_RADIUS);
-        sphere(GLOBE_RADIUS - 1);
-        translate([0,0,-GLOBE_RADIUS]) cylinder(h=GLOBE_RADIUS, r=BASE_RADIUS-1, $fn=60);  
+        sphere(GLOBE_RADIUS - SKIN_THICKNESS);
     }
 }
