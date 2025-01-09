@@ -1,13 +1,13 @@
 // Adapts a Hope bike light to an Electron Nano 9 bar mount.
 $fn=50;
-include <nutsnbolts/cyl_head_bolt.scad>;
-include <nutsnbolts/materials.scad>;
-include <libs/utils.scad>;
+include <libs/nutsnbolts/cyl_head_bolt.scad>;
+include <libs/nutsnbolts/materials.scad>;
+//include <libs/utils.scad>;
 include <libs/nwh_utils.scad>;
 
 module head_and_hole(xlate=[0,0,0],type="M5") {
 	translate(xlate) rotate([0,180,0]) {
-			hole_through(name=type, l=50, cl=0.1, h=6, hcl=0.1);
+			hole_through(name=type, l=50, cld=0.1, h=6, hcld=0.1);
 	}
 }
 
@@ -65,11 +65,11 @@ rotate([180,0,0]) difference() {
 	translate([(mainw-pitw)/2,1.7,0]) cube([pitw,pitl,pith]);
 
 	// Small M3 hole and nut trap in case you fancy doing extra bolty things
-	nut_and_hole(xlate=[mainw/2,18,-0.01],type="M3",lx=6);
-	nut_and_hole(xlate=[mainw/2,33,-0.01],type="M3",lx=6);
-	nut_and_hole(xlate=[mainw/2,48,-0.01],type="M3",lx=6);
+	nut_and_hole(xlate=[mainw/2,18,-0.01],type="M3");
+	nut_and_hole(xlate=[mainw/2,33,-0.01],type="M3");
+	nut_and_hole(xlate=[mainw/2,48,-0.01],type="M3",length=6);
 
 	// Where the Hope light screws to the bracket
-	//head_and_hole(xlate=[mainw/2,49,-0.01],type="M5");
+	head_and_hole(xlate=[mainw/2,49,-0.01],type="M5");
 
 }
