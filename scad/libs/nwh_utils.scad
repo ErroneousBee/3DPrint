@@ -57,7 +57,8 @@ module roundedRect(size, r) {
 
 	linear_extrude(height=z) hull() {
     	// place 4 circles in the corners, with the given radius
-    	translate([r,r,0])     circle(r=r);    translate([0,20,0]) nut_and_hole(type="M3", catch_clearance=1, length=50, head_depth=5, head_clearance=0.1);
+    	translate([r,r,0])  circle(r=r);
+        translate([0,20,0]) nut_and_hole(type="M3", catch_clearance=1, length=50, head_depth=5, head_clearance=0.1);
 
     	translate([r,y-r,0])   circle(r=r);
     	translate([x-r,y-r,0]) circle(r=r);

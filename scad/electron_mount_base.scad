@@ -2,37 +2,10 @@
 $fn=50;
 include <libs/nutsnbolts/cyl_head_bolt.scad>;
 include <libs/nutsnbolts/materials.scad>;
-//include <libs/utils.scad>;
 include <libs/nwh_utils.scad>;
 
-module head_and_hole(xlate=[0,0,0],type="M5") {
-	translate(xlate) rotate([0,180,0]) {
-			hole_through(name=type, l=50, cld=0.1, h=6, hcld=0.1);
-	}
-}
 
-module roundedRect(size, r) {
 
-	x = size[0];
-	y = size[1];
-	z = size[2];
-
-	linear_extrude(height=z) hull() {
-    	// place 4 circles in the corners, with the given radius
-    	translate([r,r,0])     circle(r=r);
-    	translate([r,y-r,0])   circle(r=r);
-    	translate([x-r,y-r,0]) circle(r=r);
-    	translate([x-r,r,0])   circle(r=r);
-
-	}
-
-}
-
-module body () {
-	roundedRect([mainw,mainl,8], 2);
-	translate([(mainw-topw)/2,0,mainh+sloth]) roundedRect([topw,topl,5], 2);
-	translate([(mainw-topw)/2,slotl,0]) roundedRect([topw,topl-slotl,mainh+sloth], 2);
-}
 
 
 
@@ -48,28 +21,60 @@ slotw = (mainw-middw)/2;
 
 topw = 18;
 topl = 60;
+toph = 5;
 
 pitw=8;
 pitl=4.1;
 pith=1.5;
 
-rotate([180,0,0]) difference() {
-
-	body();
-
-	// Side slots
-	translate([0,0,2.51]) cube([slotw,slotl,sloth]);	
-	translate([mainw-slotw,0,2.51]) cube([slotw,slotl,sloth]);
-
-	// Pit
-	translate([(mainw-pitw)/2,1.7,0]) cube([pitw,pitl,pith]);
-
-	// Small M3 hole and nut trap in case you fancy doing extra bolty things
-	nut_and_hole(xlate=[mainw/2,18,-0.01],type="M3");
-	nut_and_hole(xlate=[mainw/2,33,-0.01],type="M3");
-	nut_and_hole(xlate=[mainw/2,48,-0.01],type="M3",length=6);
-
-	// Where the Hope light screws to the bracket
-	head_and_hole(xlate=[mainw/2,49,-0.01],type="M5");
-
+module slider_body ( slidesize ) {
+    w=slidesize[0];
+    l=slidesize[1];
+    h=slidesize[2];
+ 
+    // Slider ( Slides into the mount )
+	roundedRect([w,l,h+sloth], 2);
+    
+    // Top section ( screw the devices onto this surface ) 
+	translate([(w-topw)/2,0,mainh+sloth]) roundedRect([topw,topl,toph], 2);
+    
+    // Stops the slider running off the end 
+	translate([(w-topw)/2,slotl,0]) roundedRect([topw,topl-slotl,h+sloth], 2);
 }
+
+
+module slider() { 
+    difference() {
+    
+        #slider_body([mainw,mainl,mainh]);
+    
+        // Side slots
+        translate([0,0,2.51]) cube([slotw,slotl,sloth]);	
+        translate([mainw-slotw,0,2.51]) cube([slotw,slotl,sloth]);
+    
+        // Pit
+        translate([(mainw-pitw)/2,1.7,0]) cube([pitw,pitl,pith]);
+    
+        // Small M3 hole and nut trap in case you fancy doing extra bolty things
+        nut_and_hole(xlate=[mainw/2,18,-0.01],type="M3");
+        nut_and_hole(xlate=[mainw/2,33,-0.01],type="M3");
+        nut_and_hole(xlate=[mainw/2,48,-0.01],type="M3",length=60);
+    
+        // Where the Hope light screws to the bracket
+        //translate([mainw/2,49,-0.01]) rotate([0,180,0]) hole_through(name="M5", l=50, cld=0.1, h=6, hcld=0.1);
+	}
+}
+    
+    
+
+
+
+module mount() {
+    
+    
+ 
+}
+
+
+slider();
+//mount(); 
