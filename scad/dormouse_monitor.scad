@@ -24,7 +24,53 @@ m_inner=2;
 // How much we overhang on the side.
 xshift = (dia_outer - dia_inner) /2;
 
+// Clip dimentions
+clip_w=5;       // Width of clip side wall
+clip_top=10;    // Height of top clippy part of clip
+clip_bot=height+ply_height;
+
+
+// The upper plate and its clip ( comment one out )
 top_plate();
+clip();
+
+
+module clip() {
+    
+    // Base
+    translate([-xshift-clip_w,0,0]) cube([dia_outer+clip_w+clip_w,10,height]);
+    translate([30,4,3]) color("red") linear_extrude(height=0.2) 
+        text("Ashplats Conservation Group",3.5,"Liberation Sans", valign = "center", halign = "center");
+    
+    // 2 side clips
+    translate([-xshift,0,0]) clip_side();
+    translate([dia_inner+xshift,0,0]) mirror([1,0,0]) clip_side();
+
+}
+
+module clip_side() {
+
+    // Post
+    translate([-clip_w,0,0]) 
+        cube([clip_w,10,height+ply_height+clip_top]);
+    translate([-(clip_w/2),0,height+ply_height+clip_top]) rotate([270,0,0]) 
+        cylinder(10,clip_w/2,clip_w/2);
+    
+    // Clip part 15deg slope and the indent tp catch on top plate
+    translate([0,0,clip_top+height+ply_height]) 
+    difference() {
+        translate([0,0,-clip_top]) cube([clip_w,10,clip_top]);
+        rotate([0,-15,0])  translate([0,-1,-clip_top*1.5]) cube([clip_w,12,clip_top*1.5]);
+       
+        // Inverse of the lug on the top plate
+        translate([1,1,-clip_top]) rotate([270,0,0]) cylinder(8,1,1);
+
+    }
+    
+}
+    
+    
+
 
 module top_plate() {
  
