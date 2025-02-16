@@ -30,8 +30,8 @@ clip_bot=height+ply_height;
 
 
 // The upper plate and its clip ( comment one out )
-//top_plate();
-clip();
+top_plate();
+//clip();
 
 
 module clip() {
