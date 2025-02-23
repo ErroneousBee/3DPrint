@@ -49,7 +49,8 @@ h_trivet=15;
 //dish(50,50,40,2,10,5);
 
 // Grid for cress grower
-trivet_mesh(35,35,5,bar=1,grid=[7,7]);
+trivet_grid(35,35,7,bar=1,grid=[6.5,6.5]);
+
 
 /**
  * A semicircular handle with a bit of an undercut
@@ -152,8 +153,16 @@ module trivet_mesh(w,d,h,bar=2,grid=[12,12]) {
     }
     
     for ( i=[1:grid[0]-2] ) {
-        for ( j=[1:grid[1]-2] ) {
-            translate([i*x_gap,j*y_gap,0]) bar(h,bar/2);
+        #for ( j=[1:grid[1]-2] ) {
+            hull() {
+                translate([(i*x_gap)-3,(j*y_gap),0]) bar(h,bar/2);
+                translate([(i*x_gap)+3,(j*y_gap),0]) bar(h,bar/2);
+            }
+            hull() {
+                translate([(i*x_gap),(j*y_gap)-3,0]) bar(h,bar/2);
+                translate([(i*x_gap),(j*y_gap)+3,0]) bar(h,bar/2);
+            }
+            
         }
     }
     
