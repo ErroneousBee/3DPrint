@@ -8,33 +8,37 @@ $fn=32;
 // Pen holder
 
 // Basic dimensions of the dish
-width=90;
-depth=80;
-height=30;
+width=100;
+depth=70;
+height=20;
 wall=3;
 
 // Inside and outside fillets of the dish
-m_outer=5;
-m_inner=10;
+m_outer=10;
+m_inner=8;
 
 // Radius of handle style 1
 r_handle=20;
 
 // Height of the trivet from bottom of dish
-h_trivet=15;
+h_trivet=10;
 
-// A trivet that fits in the dish
-//difference() {
-//    translate([wall+2,wall+2,wall])
-//        trivet_grid(width-(wall*2)-4,depth-(wall*2)-4,h_trivet-wall,grid=[15,19],bar=3);
-//    dish(width,depth,height,wall,m_inner,m_outer);
-//}
 
 
 // A dish with no handle ( e.g. soap dish ) 
-//dish(width,depth,height,wall,m_inner,m_outer);
+// dish(width,depth,height,wall,m_inner,m_outer);
+
+
 //translate([wall+2,wall+2,0])
 //    trivet_grid_holder( width-(wall*2)-4, depth-(wall*2)-4, wall+8, grid=[15,19], bar=3);
+    
+// A trivet that fits in the dish
+difference() {
+    translate([wall+2,wall+2,wall])
+        trivet_grid(width-(wall*2)-4,depth-(wall*2)-4,h_trivet-wall,grid=[17,17],bar=3);
+    dish(width,depth,height,wall,m_inner,m_outer);
+}
+
 
 
 //// A fat catcher dish, with a small handle
@@ -83,17 +87,14 @@ module dish(width,depth,height,wall,fillet_inner,fillet_outer) {
 /**
  * Utility to create a block for the dish, we subtract outer from inner in dish()
  */
-module dish_block(w,d,h,r) {
-    difference(){
-        
-        translate([r,r,r]) minkowski() {
-            cube([w-r-r,d-r-r,h-r]);
-            sphere(r=r);
-        }
-            
-        
-        translate([0,0,h])  cube([w,d,h]);
-        
+module dish_block(w,d,h,fillet=1) {
+    // TODO: warn when width/depth are too small to support fillet
+    difference() {   
+        translate([fillet,fillet,fillet]) minkowski() {
+            cube([w-fillet-fillet,d-fillet-fillet,h-fillet]);
+            sphere(r=fillet);
+        } 
+        translate([0,0,h]) cube([w,d,h]);
     }
 }
 
