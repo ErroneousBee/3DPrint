@@ -1,25 +1,21 @@
 $fn=32;
+include <libs/nwh_utils.scad>;
 
-// Parameterised dish and trivet, for creating dishes/pots of various use, such as:
-// Soap dish
-// Cress growing
-// Plant pot
-// Drip catcher for countertop grills
-// Pen holder
+// Parameterised parts for a dormouse monitor, to hold the ink and paper in place on a peice of wood that slots into a 
 
 // Measured dimensions of the tube and plywood
-dia_inner=61;   // Inner size of square drainpipe
+dia_inner=58;   // Inner size of square drainpipe
 dia_outer=66;   // Outer size of square drainpipe
 plywood=15;     // Thickness of plywood sheet
-hardboard=4;    // Thickness of hardboard sheet
+hardboard=4.5;    // Thickness of hardboard sheet
 acgtext="Ashplats Conservation Group"; // Also adds roughness to the surface
 
 // Arbitrary/derived dimensions
 pipewall= (dia_outer - dia_inner)/2; // Drainpipe wall thickness
-depth=40;           // How deep into the tube the inktray goes
-height=3;           // Thickness of the ink tray and 
+depth=30;           // How deep into the tube the inktray goes
+height=4;           // Thickness of the ink tray and 
 wall=1;             // Ink tray wall thickness 
-base_d=15;          // How 'deep' the base plate non-dish part is
+base_d=20;          // How 'deep' the base plate non-dish part is
 prot_r=3;           // Radius of protrusion holding the board to the bottom of the tube
 prot_l=6;          // Length of protrusion ( How much it overhangs, not entire length ) 
 
@@ -30,10 +26,12 @@ m_inner=2;
 // Clip dimensions
 clip_w=3;       // Width of clip side wall
 clip_top=10;    // Height of top clippy part of clip
+clip_length=8; // Legth of the clip ( must be shorter than base_d )
 
 // The upper plate and its clip ( comment one out )
-//top_plate();
-clip(hardboard);
+top_plate();
+//clip(hardboard);
+//clip(plywood);
 
 
 module clip(board_height) {
@@ -87,20 +85,38 @@ module clip_side(board_height) {
 
 module top_plate() {
  
+    // Dish
     dish(dia_inner,depth,height,wall,m_inner,m_outer);
-    translate([0,-base_d+m_inner,0]) cube([dia_inner,base_d,height]);
+    
+    // Lead plate
+    difference() { 
+        translate([0,-base_d+m_inner,0]) cube([dia_inner,base_d,height]);
+        
+        //roundels
+        translate([0,-base_d + 4,height/2]) rotate([90,0,0]) roundel(l=dia_inner, r=2);
+        translate([1, m_inner-base_d,1+height/2]) rotate([0,0,90]) roundel(l=base_d, r=1);
+        translate([dia_inner-1, m_inner-base_d,1+height/2]) rotate([90,0,90]) roundel(l=base_d, r=1);
+    }
 
 
     // Lugs the clip hooks over
-    translate([1,1,3]) rotate([90,0,0]) cylinder(base_d-2,1,1);
-    translate([dia_inner-1,1,3]) rotate([90,0,0]) cylinder(base_d-2,1,1);
+    translate([1,1,height]) lug(l=clip_length-2, r=1);
+    translate([dia_inner-1,1,height]) lug(l=clip_length-2, r=1);
+    translate([1,-base_d+clip_length+2,height]) lug(l=clip_length-2, r=1);
+    translate([dia_inner-1,-base_d+clip_length+2,height]) lug(l=clip_length-2, r=1);
 
     // Text
-    translate([dia_inner/2,-base_d/2,3]) color("red") linear_extrude(height=0.4) 
+    translate([dia_inner/2,3-base_d/2,height]) color("red") linear_extrude(height=0.4) 
         text(acgtext,3,"Liberation Sans", valign = "center", halign = "center");
 
 }
 
+module lug(l=5, r=1) {
+    
+    rotate([90,0,0]) cylinder(clip_length-2,1,1);
+    translate([-r,-l,-(r+r)]) cube([r+r,l,r+r]);
+    
+}
 
 
 
