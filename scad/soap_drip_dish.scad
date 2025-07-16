@@ -33,11 +33,11 @@ h_trivet=10;
 //    trivet_grid_holder( width-(wall*2)-4, depth-(wall*2)-4, wall+8, grid=[15,19], bar=3);
     
 // A trivet that fits in the dish
-difference() {
-    translate([wall+2,wall+2,wall])
-        trivet_grid(width-(wall*2)-4,depth-(wall*2)-4,h_trivet-wall,grid=[17,17],bar=3);
-    dish(width,depth,height,wall,m_inner,m_outer);
-}
+//difference() {
+//    translate([wall+2,wall+2,wall])
+//        trivet_grid(width-(wall*2)-4,depth-(wall*2)-4,h_trivet-wall,grid=[17,17],bar=3);
+//    dish(width,depth,height,wall,m_inner,m_outer);
+//}
 
 
 
@@ -53,7 +53,9 @@ difference() {
 //dish(50,50,40,2,10,5);
 
 // Grid for cress grower
-trivet_grid(35,35,7,bar=1,grid=[6.5,6.5]);
+//trivet_grid(35,35,7,bar=1,grid=[6.5,6.5]);
+
+glass_inner();
 
 
 /**
@@ -216,5 +218,31 @@ module rounded_bar(dim) {
             translate([0,0,h-r]) sphere(r=r);
         }
     }
+}
+
+/**
+ * A shape representing the inside of a glass grower that just needs a trivet
+ */
+module glass_inner() {
+    
+    r1 = 15;
+    d1 = 20;
+    
+    minkr = 2;
+    
+    minkowski() {
+        difference() {
+               square([20,20],center=true);
+               #translate([d1,0,0]) circle(r1);
+               #translate([-d1,0,0]) circle(r1);
+               #translate([0,d1,0]) circle(r1);
+               #translate([0,-d1,0]) circle(r1);
+        }
+            
+        circle(minkr);
+    }
+    
+    
+    
 }
 
